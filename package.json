@@ -1,0 +1,10 @@
+{
+  "name": "ao3_api",
+  "description": "A JavaScript wrapper for Archive of Our Own",
+  "version": "1.0.0",
+  "author": "ThunderRedStar",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "undici": "^5.18.0"
+  }
+}
