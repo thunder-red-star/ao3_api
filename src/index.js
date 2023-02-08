@@ -1,6 +1,7 @@
 const Work = require('./structs/ao3/Work.js');
 
 class AO3 {
+
 	/**
 	 * Constructor for the AO3 API class.
 	 * @param {object} options The options to use.
@@ -9,12 +10,7 @@ class AO3 {
 		this.options = options;
 	}
 
-	/**
-	 * Attach work object to the API.
-	 */
-	get Work() {
-		return Work;
-	}
+	static Work = Work;
 }
 
 module.exports = AO3;

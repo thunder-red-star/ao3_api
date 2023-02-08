@@ -11,3 +11,5 @@ class HTTPError extends BaseAO3Error {
 		this.code = code;
 	}
 }
+
+module.exports = HTTPError;

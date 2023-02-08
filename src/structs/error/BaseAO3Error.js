@@ -9,3 +9,5 @@ class BaseAO3Error extends Error {
 		Error.captureStackTrace(this, this.constructor);
 	}
 }
+
+module.exports = BaseAO3Error;
