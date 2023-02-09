@@ -1,3 +1,4 @@
+const User = require('./structs/ao3/User.js');
 const Work = require('./structs/ao3/Work.js');
 
 class AO3 {
@@ -11,6 +12,7 @@ class AO3 {
 	}
 
 	static Work = Work;
+	static User = User;
 }
 
 module.exports = AO3;
