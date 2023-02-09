@@ -32,9 +32,11 @@ class Requester {
 
 	/**
 	 * Add a request to the queue
-	 * @param args {any[]} The arguments to pass to the request
+	 * @param {string} url The url to request
+	 * @param {options} options The options to pass to undici
+	 * @param {CookieJar} session The session to use
 	 */
-	async request(...args) {
+	async request(url, options, session) {
 		if (this.requestsPerWindow !== -1) {
 			if (this.requests.length >= this.requestsPerWindow) {
 				const t = Date.now();
@@ -52,7 +54,7 @@ class Requester {
 			}
 		}
 
-		const requestPromise = undici.request(...args);
+		const requestPromise = undici.request(url, options, session);
 		this.requests.unshift(Date.now());
 		return requestPromise;
 	}

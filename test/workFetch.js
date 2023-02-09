@@ -29,3 +29,10 @@ user.reload().then(() => {
 	console.log(user.avatar);
 	console.log(user.nWorks);
 });
+
+// Create a session
+const session = new AO3.Session("thunderredstar", "ampere3131");
+session.login().then(() => {
+	// Load history
+	console.log(session.nBookmarks);
+});
