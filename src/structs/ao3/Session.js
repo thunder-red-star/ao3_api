@@ -518,30 +518,13 @@ class Session {
 	 * @throws {HTTPError} If we are being rate-limited.
 	 */
 	async getStats(year = new Date().getFullYear()) {
-		/*
-		 * def get_statistics(self, year=None):
-        year = "All+Years" if year is None else str(year)
-        url = f"https://archiveofourown.org/users/{self.username}/stats?year={year}"
-        soup = self.request(url) 
-        stats = {}
-        dt = soup.find("dl", {"class": "statistics meta group"})
-        if dt is not None:
-            for field in dt.findAll("dt"):
-                name = field.getText()[:-1].lower().replace(" ", "_")
-                if field.next_sibling is not None and field.next_sibling.next_sibling is not None:
-                    value = field.next_sibling.next_sibling.getText().replace(",", "")
-                    if value.isdigit():
-                        stats[name] = int(value)
-        
-        return stats
-	*/
 		if (!this.authed) {
 			throw new AuthError(`Not logged in.`);
 		}
 		const url = `https://archiveofourown.org/users/${this.username}/stats`;
 		const $ = await this.request(url);
 		const stats = {};
-		dt = $(`dl[class="statistics meta group"]`);
+		let dt = $(`dl[class="statistics meta group"]`);
 		if (dt !== null) {
 			for (const field of dt.find(`dt`)) {
 				let name = field.text().replace(`:`, ``).toLowerCase().replace(` `, `_`);

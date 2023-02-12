@@ -31,7 +31,7 @@ user.reload().then(() => {
 });
 
 // Create a session
-const session = new AO3.Session("thunderredstar", "ampere3131");
+const session = new AO3.Session("x", "y");
 session.login().then(() => {
 	// Load history
 	console.log(session.nBookmarks);
