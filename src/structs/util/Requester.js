@@ -54,7 +54,8 @@ class Requester {
 			}
 		}
 
-		const requestPromise = undici.request(url, options, session);
+		options["maxRedirections"] = 3;
+		const requestPromise = undici.request(url, options);
 		this.requests.unshift(Date.now());
 		return requestPromise;
 	}

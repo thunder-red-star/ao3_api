@@ -330,7 +330,7 @@ class User {
 		} else {
 			response = await this.requester.request(url, options);
 		}
-		if (response.statusCode !== 200) {
+		if (response.statusCode > 399) {
 			throw new HTTPError(`Request failed with status code ${response.statusCode}`, response.statusCode);
 		}
 		return response;

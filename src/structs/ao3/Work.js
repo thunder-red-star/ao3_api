@@ -2,6 +2,8 @@
 const Requester = require('../util/Requester.js');
 const cheerio = require('cheerio');
 const BaseAO3Error = require('../error/BaseAO3Error.js');
+const HTTPError = require("../error/HTTPError");
+const Chapter = require("./Chapter");
 
 class Work {
 	/**
@@ -14,13 +16,13 @@ class Work {
 	 * - load: Whether to load the work on instantiation. Defaults to true.
 	 * - loadChapters: Whether to load the chapters on instantiation. Defaults to true.
 	 */
-	constructor(id, options = {}) {
+	constructor(id, options = { load: true }) {
 		this.id = id;
 		this.options = options;
 		this.chapters = [];
 		this.requester = new Requester();
 		if (this.options.load) {
-			this.load();
+			this.reload();
 		}
 	}
 
@@ -41,7 +43,7 @@ class Work {
 	 * @returns {number} The number of chapters.
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
-	get chaptersCount() {
+	get nChapters() {
 		if (!this.loaded) {
 			throw new BaseAO3Error('Work not loaded yet');
 		}
@@ -53,11 +55,16 @@ class Work {
 	 * @returns {number} The number of expected chapters.
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
-	get expectedChaptersCount() {
+	get expectedChapters() {
 		if (!this.loaded) {
 			throw new BaseAO3Error('Work not loaded yet');
 		}
-		return parseInt(this.$('dd.chapters').text().split('/')[1].replace(/,/g, ''));
+		let chapters = parseInt(this.$('dd.chapters').text().split('/')[1].replace(/,/g, '').replace('?', ''));
+		if (isNaN(chapters)) {
+			return null;
+		} else {
+			return chapters;
+		}
 	}
 
 	/**
@@ -375,10 +382,10 @@ class Work {
 		if (this.$('h2.heading').text().includes('Error 404')) {
 			throw new Error('Work not found');
 		}
+		this.loaded = true;
 		if (loadChapters) {
 			await this.loadChapters();
 		}
-		this.loaded = true;
 	}
 
 	/**
@@ -402,14 +409,14 @@ class Work {
 	 * @param options
 	 * @returns {Promise<void>}
 	 */
-	async get (url, options = {}) {
+	async get(url, options = {}) {
 		let response;
 		if (options.session) {
 			response = await this.requester.request(url, options, options.session);
 		} else {
 			response = await this.requester.request(url, options);
 		}
-		if (response.statusCode !== 200) {
+		if (response.statusCode > 399) {
 			throw new HTTPError(`Request failed with status code ${response.statusCode}`, response.statusCode);
 		}
 		return response;
@@ -419,14 +426,36 @@ class Work {
 	 * Load chapters for this work.
 	 * @returns {Promise<void>}
 	 */
-	async loadChapters() {
-		// TODO: Implement this
+	async loadChapters(load = true) {
+		this.chapters = [];
+		let $chapters = await this.request(this.url + "/navigate");
+		// Find an ol with classes "chapter index group"
+		const chaptersList = $chapters('ol.chapter.index.group');
+		if (chaptersList.length === 0) {
+			return;
+		}
+		if (this.nChapters > 1) {
+			for (let n = 1; n <= this.nChapters; n++) {
+				// Find an LI (no class)
+				const chapter = chaptersList.children('li').eq(n - 1);
+				const id = parseInt(chapter.find('a').attr('href').split('/').pop());
+				const c = new Chapter(id, this, { load: load });
+				this.chapters.push(c);
+			}
+		}
+		else {
+			const c = new Chapter(null, this, { load: load });
+			this.chapters.push(c);
+		}
 	}
 
 	/**
-	 * Create a work from a banner.
-	 *
+	 * toString method.
+	 * @returns {string}
 	 */
+	toString() {
+		return `[Work ${this.id}]`;
+	}
 }
 
 module.exports = Work;

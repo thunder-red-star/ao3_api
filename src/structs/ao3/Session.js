@@ -120,7 +120,8 @@ class Session {
 		} else {
 			response = await this.requester.request(url, options);
 		}
-		if (response.statusCode !== 200) {
+		if (response.statusCode > 399) {
+			console.log(url);
 			throw new HTTPError(`Request failed with status code ${response.statusCode}`, response.statusCode);
 		}
 		return response;
@@ -140,7 +141,7 @@ class Session {
 		} else {
 			response = await this.requester.request(url, options);
 		}
-		if (response.statusCode !== 200) {
+		if (response.statusCode > 399) {
 			throw new HTTPError(`Request failed with status code ${response.statusCode}`, response.statusCode);
 		}
 		return response;
@@ -186,25 +187,12 @@ class Session {
 	 * @throws {HTTPError} If we are being rate-limited.
 	 */
 	async getSubscriptionsPages() {
-		/*
-		 * url = self._subscriptions_url.format(self.username, 1)
-        soup = self.request(url)
-        pages = soup.find("ol", {"title": "pagination"})
-        if pages is None:
-            return 1
-        n = 1
-        for li in pages.findAll("li"):
-            text = li.getText()
-            if text.isdigit():
-                n = int(text)
-        return n
-	*/
 		if (!this.authed) {
 			throw new AuthError(`Not logged in.`);
 		}
 		const url = this.subscriptionsURL.replace(`{1:d}`, `1`);
-		const soup = await this.request(url);
-		const pages = soup(`ol[title="pagination"]`);
+		const $ = await this.request(url);
+		const pages = $(`ol[title="pagination"]`);
 		if (pages.length === 0) {
 			return 1;
 		}
@@ -467,14 +455,14 @@ class Session {
 			let bookmarkDate = null;
 			let bookmarkNum = 1;
 			for (const bookmarked of item.find(`h4[class="bookmarked heading"]`)) {
-				dataString = bookmarked.text();
-				dateString = dataString.match(/<span>Bookmarked:<\/span> (\d{2} .+ \d{4})/);
+				let dataString = bookmarked.text();
+				let dateString = dataString.match(/<span>Bookmarked:<\/span> (\d{2} .+ \d{4})/);
 				if (dateString !== null) {
-					rawDate = dateString[1];
-					dateObj = new Date(rawDate);
+					let rawDate = dateString[1];
+					let dateObj = new Date(rawDate);
 					bookmarkDate = dateObj;
 				}
-				bookmarkString = dataString.match(/Bookmarked (\d+) times/);
+				let bookmarkString = dataString.match(/Bookmarked (\d+) times/);
 				if (bookmarkString !== null) {
 					bookmarkNum = parseInt(bookmarkString[1]);
 				}
@@ -503,10 +491,10 @@ class Session {
 			throw new AuthError(`Not logged in.`);
 		}
 		const url = this.bookmarksURL.replace(`{1:d}`, `1`);
-		const soup = await this.request(url);
-		const div = soup(`div[id="inner"]`);
-		const span = div.find(`span[class="current"]`).text().replace(`(`, ``).replace(`)`, ``);
-		const n = span.split(` `)[1];
+		const $ = await this.request(url);
+		const main = $(`div[id="main"]`);
+		const span = main.find(`h2[class="heading"]`).text();
+		const n = span.trim().split(` `)[0];
 		return parseInt(n);
 	}
 

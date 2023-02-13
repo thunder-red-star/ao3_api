@@ -1,5 +1,11 @@
 const AO3 = require('../src/index.js');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+/*
+
+// Oneshot
 console.log(JSON.stringify(AO3, null, 2));
 const work = new AO3.Work(32207944);
 
@@ -21,7 +27,7 @@ work.reload().then(() => {
 	console.log(work.relationships);
 });
 
-// Load the user
+// User
 const user = new AO3.User("thunderredstar")
 user.reload().then(() => {
 	console.log(user.name);
@@ -30,9 +36,39 @@ user.reload().then(() => {
 	console.log(user.nWorks);
 });
 
-// Create a session
-const session = new AO3.Session("x", "y");
-session.login().then(() => {
+// Session
+const session = new AO3.Session(process.env.AO3_USER, process.env.AO3_PASS);
+session.login().then(async () => {
 	// Load history
-	console.log(session.nBookmarks);
+	let nBookmarks = await session.nBookmarks();
+	console.log(`You have ${nBookmarks} bookmarks.`);
 });
+*/
+
+// Multichapter
+const work2 = new AO3.Work(41195370);
+
+/*
+work2.reload().then(() => {
+	console.log(work2.nChapters);
+	console.log(work2.expectedChapters);
+	console.log(work2.chapters.toString());
+	work2.chapters[0].reload().then(() => {
+		console.log(work2.chapters[0]);
+		// console.log(work2.chapters[0].title);
+		console.log(work2.chapters[0].text);
+	});
+});
+ */
+
+// promises are nasty, rewrite with async/await.
+(async () => {
+	await work2.reload();
+	console.log(work2.nChapters);
+	console.log(work2.expectedChapters);
+	console.log(work2.chapters.toString());
+	await work2.chapters[0].reload();
+	console.log(work2.chapters[0]);
+	// console.log(work2.chapters[0].title);
+	console.log(work2.chapters[0].text);
+})();
