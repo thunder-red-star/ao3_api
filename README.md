@@ -9,7 +9,24 @@ npm install ao3-api
 ```
 
 ## Usage
-TBD
+```js
+const AO3 = require('ao3-api');
+```
+There is no base AO3 constructor. You must call a static class under AO3, for example, AO3.Work() or AO3.Search().
+```js
+const AO3 = require('ao3-api');
+
+// Get a work by ID
+const work = new AO3.Work(12345678);
+work.reload().then(() => {
+    console.log(work.title);
+});
+```
+
+## Testing
+There are a bunch of files in the `test` directory. They're all named after the function they're testing. 
+If you want, you can create a .env file in that directory and `AO3_USER=<your username>` and `AO3_PASS=<your password>` 
+so you have access to restricted works. If you don't, you'll only be able to access public works.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
