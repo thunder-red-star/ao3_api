@@ -36,7 +36,7 @@ class Requester {
 	 * @param {options} options The options to pass to undici
 	 * @param {CookieJar} session The session to use
 	 */
-	async request(url, options, session) {
+	async request(url, options = {}, session) {
 		if (this.requestsPerWindow !== -1) {
 			if (this.requests.length >= this.requestsPerWindow) {
 				const t = Date.now();

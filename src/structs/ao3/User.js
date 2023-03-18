@@ -26,6 +26,7 @@ class User {
 		if (options.load) {
 			this.load();
 		}
+		this.data = {};
 	}
 
 	/**
@@ -34,11 +35,15 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get nWorks() {
-		if (!this.worksLoaded) {
-			throw new BaseAO3Error(`User works not loaded.`);
+		if (this.data.nWorks) {
+			return this.data.nWorks;
+		} else {
+			if (!this.worksLoaded) {
+				throw new BaseAO3Error(`User works not loaded.`);
+			}
+			const count = this.$works('div#inner span.current').text().replace('(', '').replace(')', '').split(' ')[1];
+			return parseInt(count);
 		}
-		const count = this.$works('div#inner span.current').text().replace('(', '').replace(')', '').split(' ')[1];
-		return parseInt(count);
 	}
 
 	/**
@@ -48,21 +53,26 @@ class User {
 	 * @private
 	 */
 	get _worksPages() {
-		if (!this.worksLoaded) {
-			throw new BaseAO3Error(`User works not loaded.`);
-		}
-		const pages = this.$works('ol[title="pagination"]');
-		if (pages.length === 0) {
-			return 1;
-		}
-		let n = 1;
-		for (const li of pages.find('li')) {
-			const text = li.text();
-			if (Number.isInteger(parseInt(text))) {
-				n = parseInt(text);
+		if (this.data._worksPages) {
+			return this.data._worksPages;
+		} else {
+			if (!this.worksLoaded) {
+				throw new BaseAO3Error(`User works not loaded.`);
 			}
+			const pages = this.$works('ol[title="pagination"]');
+			if (pages.length === 0) {
+				return 1;
+			}
+			let n = 1;
+			for (const li of pages.find('li')) {
+				const text = li.text();
+				if (Number.isInteger(parseInt(text))) {
+					n = parseInt(text);
+				}
+			}
+			this.data._worksPages = n;
+			return n;
 		}
-		return n;
 	}
 
 	/**
@@ -150,11 +160,16 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get nBookmarks() {
-		if (!this.bookmarksLoaded) {
-			throw new BaseAO3Error(`User bookmarks not loaded.`);
+		if (this.data.nBookmarks) {
+			return this.data.nBookmarks;
+		} else {
+			if (!this.bookmarksLoaded) {
+				throw new BaseAO3Error(`User bookmarks not loaded.`);
+			}
+			const count = this.$bookmarks('div#inner span.current').text().replace('(', '').replace(')', '').split(' ')[1];
+			this.data.nBookmarks = parseInt(count);
+			return parseInt(count);
 		}
-		const count = this.$bookmarks('div#inner span.current').text().replace('(', '').replace(')', '').split(' ')[1];
-		return parseInt(count);
 	}
 
 	/**
@@ -230,15 +245,20 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get bio() {
-		if (!this.profileLoaded) {
-			throw new BaseAO3Error(`User profile not loaded.`);
+		if (this.data.bio) {
+			return this.data.bio;
+		} else {
+			if (!this.profileLoaded) {
+				throw new BaseAO3Error(`User profile not loaded.`);
+			}
+			const div = this.$profile('div.bio.module');
+			if (div.length === 0) {
+				return '';
+			}
+			const blockquote = div.find('blockquote.userstuff');
+			this.data.bio = blockquote.text() || '';
+			return blockquote.text() || '';
 		}
-		const div = this.$profile('div.bio.module');
-		if (div.length === 0) {
-			return '';
-		}
-		const blockquote = div.find('blockquote.userstuff');
-		return blockquote.text() || '';
 	}
 
 	/**
@@ -256,28 +276,23 @@ class User {
 	 * @throws {AuthError} If the user is not logged in.
 	 */
 	async getID() {
-		/*
-		if self._session is None or not self._session.is_authed:
-            raise utils.AuthError("You can only get a user ID using an authenticated session")
-
-        header = self._soup_profile.find("div", {"class": "primary header module"})
-        input_ = header.find("input", {"name": "subscription[subscribable_id]"})
-        if input_ is None:
-            raise utils.UnexpectedResponseError("Couldn't fetch user ID")
-        return int(input_.attrs["value"])
-		 */
-		if (!this.profileLoaded) {
-			throw new BaseAO3Error(`User profile not loaded.`);
+		if (this.user.id) {
+			return this.user.id;
+		} else {
+			if (!this.profileLoaded) {
+				throw new BaseAO3Error(`User profile not loaded.`);
+			}
+			if (!this.session || !this.session.authed) {
+				throw new AuthError(`You can only get a user ID using an authenticated session.`);
+			}
+			const header = this.$profile('div.primary.header.module');
+			const input = header.find('input[name="subscription[subscribable_id]"]');
+			if (input.length === 0) {
+				throw new BaseAO3Error(`Couldn't fetch user ID.`);
+			}
+			this.user.id = parseInt(input.attr('value'));
+			return parseInt(input.attr('value'));
 		}
-		if (!this.session || !this.session.authed) {
-			throw new AuthError(`You can only get a user ID using an authenticated session.`);
-		}
-		const header = this.$profile('div.primary.header.module');
-		const input = header.find('input[name="subscription[subscribable_id]"]');
-		if (input.length === 0) {
-			throw new BaseAO3Error(`Couldn't fetch user ID.`);
-		}
-		return parseInt(input.attr('value'));
 	}
 
 	/**
@@ -294,12 +309,17 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get avatar() {
-		if (!this.profileLoaded) {
-			throw new BaseAO3Error(`User profile not loaded.`);
+		if (this.data.avatar) {
+			return this.data.avatar;
+		} else {
+			if (!this.profileLoaded) {
+				throw new BaseAO3Error(`User profile not loaded.`);
+			}
+			const icon = this.$profile('p.icon');
+			const src = icon.find('img').attr('src');
+			this.data.avatar = src || null;
+			return src || null;
 		}
-		const icon = this.$profile('p.icon');
-		const src = icon.find('img').attr('src');
-		return src || '';
 	}
 
 	/**
