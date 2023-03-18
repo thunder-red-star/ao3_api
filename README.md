@@ -3,6 +3,9 @@ An unofficial JavaScript API for Archive of Our Own (AO3). Based on the [Python 
 The goal was to emulate the Python version as closely as possible, but with the added benefit of being able to use it natively in Node.js (for my Discord bot).
 None of the code has been rigorously tested, so don't expect it to work perfectly. If you find any bugs, please open an issue and I'll do my best to fix it.
 
+The library is kind of barebones and only includes the things I need (works, chapters, users, sessions, and searches).
+I will probably be adding other features slowly but don't expect anything too soon.
+
 ## Installation
 ```bash
 npm install ao3-api
