@@ -1,7 +1,7 @@
 {
   "name": "ao3",
   "description": "A JavaScript wrapper for Archive of Our Own",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "ThunderRedStar",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
@@ -13,5 +13,9 @@
     "type": "git",
     "url": "https://github.com/thunder-red-star/ao3_api.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"TBD\" && exit 1"
+  }
 }
