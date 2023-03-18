@@ -48,19 +48,17 @@ session.login().then(async () => {
 // Multichapter
 const work2 = new AO3.Work(41195370);
 
-/*
 work2.reload().then(() => {
 	console.log(work2.nChapters);
 	console.log(work2.expectedChapters);
 	console.log(work2.chapters.toString());
 	work2.chapters[0].reload().then(() => {
-		console.log(work2.chapters[0]);
-		// console.log(work2.chapters[0].title);
+		console.log(work2.chapters[0].title);
 		console.log(work2.chapters[0].text);
 	});
 });
- */
 
+/*
 // promises are nasty, rewrite with async/await.
 (async () => {
 	await work2.reload();
@@ -68,7 +66,9 @@ work2.reload().then(() => {
 	console.log(work2.expectedChapters);
 	console.log(work2.chapters.toString());
 	await work2.chapters[0].reload();
-	console.log(work2.chapters[0]);
 	// console.log(work2.chapters[0].title);
+	console.log(work2)
+	console.log(work2.chapters[0].title)
 	console.log(work2.chapters[0].text);
 })();
+ */

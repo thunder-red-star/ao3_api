@@ -22,6 +22,7 @@ class Chapter {
 		if (options.load) {
 			this.reload();
 		}
+		this.data = {};
 	}
 
 	/**
@@ -31,26 +32,6 @@ class Chapter {
 	 */
 	async reload() {
 		/*
-		from .works import Work
-
-        for attr in self.__class__.__dict__:
-            if isinstance(getattr(self.__class__, attr), cached_property):
-                if attr in self.__dict__:
-                    delattr(self, attr)
-
-        if self.work is None:
-            soup = self.request(f"https://archiveofourown.org/chapters/{self.id}?view_adult=true")
-            workid = soup.find("li", {"class": "chapter entire"})
-            if workid is None:
-                raise utils.InvalidIdError("Cannot find work")
-            self._work = Work(utils.workid_from_url(workid.a["href"]))
-        else:
-            self.work.reload()
-
-        for chapter in self.work.chapters:
-            if chapter == self:
-                self._soup = chapter._soup
-		 */
 		const url = `https://archiveofourown.org/chapters/${this.id}?view_adult=true`;
 		this.$ = await this.request(url);
 		if (this.work === null) {
@@ -71,8 +52,35 @@ class Chapter {
 		this.isLoaded = true;
 
 		return this;
-	}
+		 */
+		// Turn this code into a promise.
+		return new Promise((resolve, reject) => {
+			const url = `https://archiveofourown.org/chapters/${this.id}?view_adult=true`;
+			this.request(url).then($ => {
+				this.$ = $;
+				if (this.work === null) {
+					const workId = this.$(`li.chapter.entire`).find(`a`).attr(`href`);
+					if (workId === undefined) {
+						throw new BaseAO3Error(`Cannot find work`);
+					}
+					this.work = new Work(workIdFromUrl(workId));
+				}
 
+				for (const chapter of this.work.chapters) {
+					// Load the chapter's soup.
+					if (chapter.id === this.id) {
+						this.$ = chapter.$;
+					}
+				}
+
+				this.isLoaded = true;
+
+				resolve(this);
+			}).catch(err => {
+				reject(err);
+			});
+		});
+	}
 
 	/**
 	 * Authenticity token used to take actions on the chapter.
@@ -104,30 +112,33 @@ class Chapter {
 	 * @returns {string} The chapter's text.
 	 */
 	get text() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
-		}
-		let text = ``;
-		if (this.id !== null) {
-			const div = this.$(`div[role="article"]`);
-			for (let x = 0; x < div.length; x++) {
-				const p = div.children('p').eq(x);
-				text += `${p.text().replace(`\n`, ``)}\n`;
-				if (p.next().is(`string`)) {
-					text += p.next().text();
-				}
-			}
+		if (this.data.text) {
+			return this.data.text;
 		} else {
-			const div = this.$;
-			for (let x = 0; x < div.length; x++) {
-				const p = div.eq(x);
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			let text = ``;
+			if (this.id !== null) {
+				const div = this.$(`div[role="article"]`);
+				let p = div.children('p').eq(0);
 				text += `${p.text().replace(`\n`, ``)}\n`;
-				if (p.next().is(`string`)) {
+				while (p.next()["0"] && p.next()["0"].name === `p`) {
 					text += p.next().text() + `\n`;
+					p = p.next();
+				}
+			} else {
+				const div = this.$;
+				let p = div.children('p').eq(0);
+				text += `${p.text().replace(`\n`, ``)}\n`;
+				while (p.next()["0"] && p.next()["0"].name === `p`) {
+					text += p.next().text() + `\n`;
+					p = p.next();
 				}
 			}
+			this.data.text = text;
+			return text;
 		}
-		return text;
 	}
 
 	/**
@@ -136,21 +147,26 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get title() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
+		if (this.data.title) {
+			return this.data.title;
+		} else {
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			if (this.id === null) {
+				return this.work.title;
+			}
+			const prefaceGroup = this.$(`div.chapter.preface.group`);
+			if (prefaceGroup.length === 0) {
+				return `${this.number}`;
+			}
+			const title = prefaceGroup.find(`h3.title`);
+			if (title.length === 0) {
+				return `${this.number}`;
+			}
+			this.data.title = title.contents().last().text().trim().slice(2);
+			return title.contents().last().text().trim().slice(2);
 		}
-		if (this.id === null) {
-			return this.work.title;
-		}
-		const prefaceGroup = this.$(`div.chapter.preface.group`);
-		if (prefaceGroup.length === 0) {
-			return `${this.number}`;
-		}
-		const title = prefaceGroup.find(`h3.title`);
-		if (title.length === 0) {
-			return `${this.number}`;
-		}
-		return title.contents().last().text().trim().slice(2);
 	}
 
 	/**
@@ -159,13 +175,18 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get number() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
+		if (this.data.number) {
+			return this.data.number;
+		} else {
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			if (this.id === null) {
+				return 1;
+			}
+			this.data.number = parseInt(this.$(`div.chapter`).attr(`id`).split(`-`).pop());
+			return parseInt(this.$(`div.chapter`).attr(`id`).split(`-`).pop());
 		}
-		if (this.id === null) {
-			return 1;
-		}
-		return parseInt(this.$(`div.chapter`).attr(`id`).split(`-`).pop());
 	}
 
 	/**
@@ -174,18 +195,23 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get summary() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
+		if (this.data.summary) {
+			return this.data.summary;
+		} else {
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			const notes = this.$(`div#summary`);
+			if (notes.length === 0) {
+				return ``;
+			}
+			let text = ``;
+			for (const p of notes.find(`p`)) {
+				text += `${p.text()}\n`;
+			}
+			this.data.summary = text;
+			return text;
 		}
-		const notes = this.$(`div#summary`);
-		if (notes.length === 0) {
-			return ``;
-		}
-		let text = ``;
-		for (const p of notes.find(`p`)) {
-			text += `${p.text()}\n`;
-		}
-		return text;
 	}
 
 	/**
@@ -194,18 +220,23 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get startNotes() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
+		if (this.data.startNotes) {
+			return this.data.startNotes;
+		} else {
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			const notes = this.$(`div#notes`);
+			if (notes.length === 0) {
+				return ``;
+			}
+			let text = ``;
+			for (const p of notes.find(`p`)) {
+				text += `${p.text()}\n`;
+			}
+			this.data.startNotes = text;
+			return text;
 		}
-		const notes = this.$(`div#notes`);
-		if (notes.length === 0) {
-			return ``;
-		}
-		let text = ``;
-		for (const p of notes.find(`p`)) {
-			text += `${p.text()}\n`;
-		}
-		return text;
 	}
 
 	/**
@@ -214,18 +245,23 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get endNotes() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
+		if (this.data.endNotes) {
+			return this.data.endNotes;
+		} else {
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			let notes = this.$(`div#chapter_${this.number}_endnotes`);
+			if (notes.length === 0) {
+				return ``;
+			}
+			let text = ``;
+			for (const p of notes.find(`p`)) {
+				text += `${p.text()}\n`;
+			}
+			this.data.endNotes = text;
+			return text;
 		}
-		let notes = this.$(`div#chapter_${this.number}_endnotes`);
-		if (notes.length === 0) {
-			return ``;
-		}
-		let text = ``;
-		for (const p of notes.find(`p`)) {
-			text += `${p.text()}\n`;
-		}
-		return text;
 	}
 
 	/**
@@ -234,13 +270,19 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get url() {
-		if (!this.isLoaded) {
-			throw new BaseAO3Error(`Chapter is not loaded.`);
+		if (this.data.url) {
+			return this.data.url;
+		} else {
+			if (!this.isLoaded) {
+				throw new BaseAO3Error(`Chapter is not loaded.`);
+			}
+			if (this.id === null) {
+				this.data.url = this.work.url;
+				return this.work.url;
+			}
+			this.data.url = `${this.work.url}/chapters/${this.id}`;
+			return `${this.work.url}/chapters/${this.id}`;
 		}
-		if (this.id === null) {
-			return this.work.url;
-		}
-		return `${this.work.url}/chapters/${this.id}`;
 	}
 
 	/**

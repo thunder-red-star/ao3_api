@@ -8,5 +8,3 @@ function WordCount(text) {
 }
 
 module.exports = WordCount;
-
-// because when i am available to play i don't have to wait 5 minutes for mc to start
