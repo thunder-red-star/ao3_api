@@ -1,5 +1,5 @@
 {
-  "name": "ao3_api",
+  "name": "ao3",
   "description": "A JavaScript wrapper for Archive of Our Own",
   "version": "1.0.0",
   "author": "ThunderRedStar",
@@ -8,5 +8,10 @@
     "dotenv": "^16.0.3",
     "tough-cookie": "^4.1.2",
     "undici": "^5.18.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thunder-red-star/ao3_api.git"
+  },
+  "license": "MIT"
 }

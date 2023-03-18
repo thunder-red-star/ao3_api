@@ -8,16 +8,16 @@ I will probably be adding other features slowly but don't expect anything too so
 
 ## Installation
 ```bash
-npm install ao3-api
+npm install ao3
 ```
 
 ## Usage
 ```js
-const AO3 = require('ao3-api');
+const AO3 = require('ao3');
 ```
 There is no base AO3 constructor. You must call a static class under AO3, for example, AO3.Work() or AO3.Search().
 ```js
-const AO3 = require('ao3-api');
+const AO3 = require('ao3');
 
 // Get a work by ID
 const work = new AO3.Work(12345678);
