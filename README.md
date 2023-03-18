@@ -1,6 +1,7 @@
 # ao3-api
 An unofficial JavaScript API for Archive of Our Own (AO3). Based on the [Python version](https://github.com/ArmindoFlores/ao3_api) by Armindo Flores.
 The goal was to emulate the Python version as closely as possible, but with the added benefit of being able to use it natively in Node.js (for my Discord bot).
+None of the code has been rigorously tested, so don't expect it to work perfectly. If you find any bugs, please open an issue and I'll do my best to fix it.
 
 ## Installation
 ```bash
