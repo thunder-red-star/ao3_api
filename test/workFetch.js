@@ -51,6 +51,7 @@ const work2 = new AO3.Work(41195370);
 work2.reload().then(() => {
 	console.log(work2.nChapters);
 	console.log(work2.expectedChapters);
+	console.log(work2.authors);
 	console.log(work2.chapters.toString());
 	work2.chapters[0].reload().then(() => {
 		console.log(work2.chapters[0].title);

@@ -6,6 +6,7 @@ const HTTPError = require("../error/HTTPError");
 const AuthError = require("../error/AuthError");
 const Work = require("./Work");
 const workFromBanner = require("../util/WorkFromBanner");
+
 class User {
 	/**
 	 * Constructor for the User class.

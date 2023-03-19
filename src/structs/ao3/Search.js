@@ -176,7 +176,6 @@ class Search {
 			}
 
 			const url = `https://archiveofourown.org/works/search?${query.string}`;
-			console.log(url);
 			if (session) {
 				session.request(url).then(($) => {
 					resolve($);
@@ -217,15 +216,6 @@ class Search {
 				}
 
 				const works = [];
-				/*
-				 for work in results.find_all("li", {"role": "article"}):
-            if work.h4 is None:
-                continue
-
-            new = get_work_from_banner(work)
-            new._session = self.session
-            works.append(new)
-				 */
 				results.find('li[role="article"]').each((i, work) => {
 					const workdiv = $(work);
 					if (workdiv.find('h4').length === 0) {

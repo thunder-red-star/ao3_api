@@ -17,6 +17,7 @@ class Work {
 	 * - loadChapters: Whether to load the chapters on instantiation. Defaults to true.
 	 */
 	constructor(id, options = { load: true }) {
+
 		this.id = id;
 		this.options = options;
 		this.chapters = [];
@@ -543,6 +544,26 @@ class Work {
 			throw new HTTPError(`Request failed with status code ${response.statusCode}`, response.statusCode);
 		}
 		return response;
+	}
+
+	/**
+	 * Loads authors for this work.
+	 * @returns {User[]} The authors of this work.
+	 */
+	get authors() {
+		// Avoid circular dependency
+		const User = require("./User");
+
+		if (this.data.authors !== undefined) {
+			return this.data.authors;
+		} else {
+			if (!this.loaded) {
+				throw new BaseAO3Error('Work not loaded yet');
+			}
+			const textAuthors = this.$('h3.byline.heading').text().replace(/\n/g, '').split(', ');
+			this.data.authors = textAuthors.map(author => new User(author.trim(), { load: false }));
+			return textAuthors.map(author => new User(author.trim(), { load: false }));
+		}
 	}
 
 	/**
