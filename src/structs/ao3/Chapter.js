@@ -207,7 +207,7 @@ class Chapter {
 			}
 			let text = ``;
 			for (const p of notes.find(`p`)) {
-				text += `${p.text()}\n`;
+				text += `${cheerio.load(p).text()}\n`;
 			}
 			this.data.summary = text;
 			return text;
