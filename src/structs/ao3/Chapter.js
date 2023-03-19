@@ -112,7 +112,7 @@ class Chapter {
 	 * @returns {string} The chapter's text.
 	 */
 	get text() {
-		if (this.data.text) {
+		if (this.data.text !== undefined) {
 			return this.data.text;
 		} else {
 			if (!this.isLoaded) {
@@ -147,7 +147,7 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get title() {
-		if (this.data.title) {
+		if (this.data.title !== undefined) {
 			return this.data.title;
 		} else {
 			if (!this.isLoaded) {
@@ -175,7 +175,7 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get number() {
-		if (this.data.number) {
+		if (this.data.number !== undefined) {
 			return this.data.number;
 		} else {
 			if (!this.isLoaded) {
@@ -195,7 +195,7 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get summary() {
-		if (this.data.summary) {
+		if (this.data.summary !== undefined) {
 			return this.data.summary;
 		} else {
 			if (!this.isLoaded) {
@@ -220,7 +220,7 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get startNotes() {
-		if (this.data.startNotes) {
+		if (this.data.startNotes !== undefined) {
 			return this.data.startNotes;
 		} else {
 			if (!this.isLoaded) {
@@ -245,7 +245,7 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get endNotes() {
-		if (this.data.endNotes) {
+		if (this.data.endNotes !== undefined) {
 			return this.data.endNotes;
 		} else {
 			if (!this.isLoaded) {
@@ -270,7 +270,7 @@ class Chapter {
 	 * @throws {BaseAO3Error} If the chapter is not loaded.
 	 */
 	get url() {
-		if (this.data.url) {
+		if (this.data.url !== undefined) {
 			return this.data.url;
 		} else {
 			if (!this.isLoaded) {

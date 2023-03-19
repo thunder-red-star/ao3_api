@@ -33,7 +33,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get kudos() {
-		if (this.data.kudos) {
+		if (this.data.kudos !== undefined) {
 			return this.data.kudos;
 		} else {
 			if (!this.loaded) {
@@ -50,7 +50,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get nChapters() {
-		if (this.data.nChapters) {
+		if (this.data.nChapters !== undefined) {
 			return this.data.nChapters;
 		} else {
 			if (!this.loaded) {
@@ -67,7 +67,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get expectedChapters() {
-		if (this.data.expectedChapters) {
+		if (this.data.expectedChapters !== undefined) {
 			return this.data.expectedChapters;
 		} else {
 			if (!this.loaded) {
@@ -90,7 +90,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get status() {
-		if (this.data.status) {
+		if (this.data.status !== undefined) {
 			return this.data.status;
 		} else {
 			if (!this.loaded) {
@@ -107,7 +107,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get hits() {
-		if (this.data.hits) {
+		if (this.data.hits !== undefined) {
 			return this.data.hits;
 		} else {
 			if (!this.loaded) {
@@ -124,7 +124,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get comments() {
-		if (this.data.comments) {
+		if (this.data.comments !== undefined) {
 			return this.data.comments;
 		} else {
 			if (!this.loaded) {
@@ -141,7 +141,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get wordCount() {
-		if (this.data.wordCount) {
+		if (this.data.wordCount !== undefined) {
 			return this.data.wordCount;
 		} else {
 			if (!this.loaded) {
@@ -158,7 +158,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get restricted() {
-		if (this.data.restricted) {
+		if (this.data.restricted !== undefined) {
 			return this.data.restricted;
 		} else {
 			if (!this.loaded) {
@@ -175,7 +175,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get language() {
-		if (this.data.language) {
+		if (this.data.language !== undefined) {
 			return this.data.language;
 		} else {
 			if (!this.loaded) {
@@ -192,7 +192,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get bookmarks() {
-		if (this.data.bookmarks) {
+		if (this.data.bookmarks !== undefined) {
 			return this.data.bookmarks;
 		} else {
 			if (!this.loaded) {
@@ -209,7 +209,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get title() {
-		if (this.data.title) {
+		if (this.data.title !== undefined) {
 			return this.data.title;
 		} else {
 			if (!this.loaded) {
@@ -226,7 +226,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get published() {
-		if (this.data.published) {
+		if (this.data.published !== undefined) {
 			return this.data.published;
 		} else {
 			if (!this.loaded) {
@@ -244,7 +244,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get edited() {
-		if (this.data.edited) {
+		if (this.data.edited !== undefined) {
 			return this.data.edited;
 		} else {
 			if (!this.loaded) {
@@ -267,7 +267,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get updated() {
-		if (this.data.updated) {
+		if (this.data.updated !== undefined) {
 			return this.data.updated;
 		} else {
 			if (!this.loaded) {
@@ -285,7 +285,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get tags() {
-		if (this.data.tags) {
+		if (this.data.tags !== undefined) {
 			return this.data.tags;
 		} else {
 			if (!this.loaded) {
@@ -302,7 +302,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get characters() {
-		if (this.data.characters) {
+		if (this.data.characters !== undefined) {
 			return this.data.characters;
 		} else {
 			if (!this.loaded) {
@@ -319,7 +319,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get relationships() {
-		if (this.data.relationships) {
+		if (this.data.relationships !== undefined) {
 			return this.data.relationships;
 		} else {
 			if (!this.loaded) {
@@ -336,7 +336,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get fandoms() {
-		if (this.data.fandoms) {
+		if (this.data.fandoms !== undefined) {
 			return this.data.fandoms;
 		} else {
 			if (!this.loaded) {
@@ -353,7 +353,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get categories() {
-		if (this.data.categories) {
+		if (this.data.categories !== undefined) {
 			return this.data.categories;
 		} else {
 			if (!this.loaded) {
@@ -370,7 +370,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get warnings() {
-		if (this.data.warnings) {
+		if (this.data.warnings !== undefined) {
 			return this.data.warnings;
 		} else {
 			if (!this.loaded) {
@@ -387,7 +387,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get ratings() {
-		if (this.data.ratings) {
+		if (this.data.ratings !== undefined) {
 			return this.data.ratings;
 		} else {
 			if (!this.loaded) {
@@ -404,7 +404,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get summary() {
-		if (this.data.summary) {
+		if (this.data.summary !== undefined) {
 			return this.data.summary;
 		} else {
 			if (!this.loaded) {
@@ -421,7 +421,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get startNotes() {
-		if (this.data.startNotes) {
+		if (this.data.startNotes !== undefined) {
 			return this.data.startNotes;
 		} else {
 			if (!this.loaded) {
@@ -438,7 +438,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get endNotes() {
-		if (this.data.endNotes) {
+		if (this.data.endNotes !== undefined) {
 			return this.data.endNotes;
 		} else {
 			if (!this.loaded) {
@@ -463,7 +463,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get complete() {
-		if (this.data.complete) {
+		if (this.data.complete !== undefined) {
 			return this.data.complete;
 		} else {
 			if (!this.loaded) {
@@ -480,7 +480,7 @@ class Work {
 	 * @throws {BaseAO3Error} If the work hasn't been loaded yet
 	 */
 	get collections() {
-		if (this.data.collections) {
+		if (this.data.collections !== undefined) {
 			return this.data.collections;
 		} else {
 			if (!this.loaded) {

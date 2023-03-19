@@ -10,7 +10,11 @@ const Series = require("../ao3/Series");
  */
 function setIfNotNull (object, key, value) {
 	if (!(value === null || value === undefined)) {
-		object[key] = value;
+		if (value === "") {
+			object[key] = null;
+		} else {
+			object[key] = value;
+		}
 	}
 }
 
@@ -63,7 +67,7 @@ function WorkFromBanner (banner) {
 	let rating = banner.find('ul.required-tags li.rating').text();
 	let categories = banner.find('ul.required-tags li.category').text().split(', ');
 
-	let summary = banner.find('blockquote.userstuff.summary').text();
+	let summary = banner.find('blockquote.userstuff.summary').text().trim();
 
 	let series = [];
 	banner.find('ul.series a').each((i, el) => {

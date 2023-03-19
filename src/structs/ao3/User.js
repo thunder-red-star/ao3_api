@@ -35,7 +35,7 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get nWorks() {
-		if (this.data.nWorks) {
+		if (this.data.nWorks !== undefined) {
 			return this.data.nWorks;
 		} else {
 			if (!this.worksLoaded) {
@@ -53,7 +53,7 @@ class User {
 	 * @private
 	 */
 	get _worksPages() {
-		if (this.data._worksPages) {
+		if (this.data._worksPages !== undefined) {
 			return this.data._worksPages;
 		} else {
 			if (!this.worksLoaded) {
@@ -160,7 +160,7 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get nBookmarks() {
-		if (this.data.nBookmarks) {
+		if (this.data.nBookmarks !== undefined) {
 			return this.data.nBookmarks;
 		} else {
 			if (!this.bookmarksLoaded) {
@@ -245,7 +245,7 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get bio() {
-		if (this.data.bio) {
+		if (this.data.bio !== undefined) {
 			return this.data.bio;
 		} else {
 			if (!this.profileLoaded) {
@@ -276,7 +276,7 @@ class User {
 	 * @throws {AuthError} If the user is not logged in.
 	 */
 	async getID() {
-		if (this.user.id) {
+		if (this.user.id !== undefined) {
 			return this.user.id;
 		} else {
 			if (!this.profileLoaded) {
@@ -309,7 +309,7 @@ class User {
 	 * @throws {BaseAO3Error} If the user is not loaded.
 	 */
 	get avatar() {
-		if (this.data.avatar) {
+		if (this.data.avatar !== undefined) {
 			return this.data.avatar;
 		} else {
 			if (!this.profileLoaded) {
